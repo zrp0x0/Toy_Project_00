@@ -16,6 +16,16 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
 
+
+    // 상품 생성
+    @Override
+    public boolean createItem(ItemRequest itemRequest) {
+        Item item = itemRequest.toEntity();
+        itemRepository.save(item);
+        return true;
+    }
+
+
     // 상품 조회
     // TODO: 나중에 판매처 추가하면 N+1 문제 발생할 듯
     @Override
@@ -36,15 +46,6 @@ public class ItemServiceImpl implements ItemService {
         } else {
             return null;
         }
-    }
-
-
-    // 상품 생성
-    @Override
-    public boolean createItem(ItemRequest itemRequest) {
-        Item item = itemRequest.toEntity();
-        itemRepository.save(item);
-        return true;
     }
 
 

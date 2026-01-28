@@ -27,6 +27,7 @@ public class ItemRequest {
     @Max(value = 999, message = "최대 등록 수량은 999개입니다.")
     private Integer count;
 
+    // DTO => Entity는 일반 메소드가 좋음
     public Item toEntity() {
         Item item = Item.builder()
             .name(this.name)

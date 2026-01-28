@@ -21,7 +21,27 @@ import lombok.RequiredArgsConstructor;
 public class ItemController {
 
     private final ItemService itemService;
+
+
+    // 상품 생성
+    @GetMapping("/item/create") 
+    public String itemCreate(
+        Model model
+    ) {
+        model.addAttribute("itemForm", new ItemRequest());
+        return "itemCreate.html";
+    }
+
+    @PostMapping("/item/create")
+    public String itemCreate(
+        ItemRequest itemRequest
+    ) {
+        itemService.createItem(itemRequest);
+        // 나중에 id detail로 전환하는 로직 작업 해보자
+        return "redirect:/item/list";
+    }
     
+
     // 상품 조회
     @GetMapping("/item/list")
     public String itemList(
@@ -47,25 +67,6 @@ public class ItemController {
     }
 
 
-    // 상품 생성
-    @GetMapping("/item/create") 
-    public String itemCreate(
-        Model model
-    ) {
-        model.addAttribute("itemForm", new ItemRequest());
-        return "itemCreate.html";
-    }
-
-    @PostMapping("/item/create")
-    public String itemCreate(
-        ItemRequest itemRequest
-    ) {
-        itemService.createItem(itemRequest);
-        // 나중에 id detail로 전환하는 로직 작업 해보자
-        return "redirect:/item/list";
-    }
-
-    
     // 상품 수정
     @GetMapping("/item/update/{id}")
     public String itemUpdate(

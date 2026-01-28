@@ -26,7 +26,7 @@ import lombok.ToString;
 @EntityListeners(AuditingEntityListener.class)
 public class Item {
     
-    // 아이디 / 이름 / 가격 / 수량
+    // 아이디 / 이름 / 가격 / 수량 / 등록날짜
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
