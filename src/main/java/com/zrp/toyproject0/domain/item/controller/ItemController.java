@@ -1,7 +1,6 @@
-package com.zrp.toyproject0.item.controller;
+package com.zrp.toyproject0.domain.item.controller;
 
 import java.util.List;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -9,11 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-
-import com.zrp.toyproject0.item.dto.ItemRequest;
-import com.zrp.toyproject0.item.dto.ItemResponse;
-import com.zrp.toyproject0.item.service.ItemService;
-
+import com.zrp.toyproject0.domain.item.dto.ItemRequest;
+import com.zrp.toyproject0.domain.item.dto.ItemResponse;
+import com.zrp.toyproject0.domain.item.service.ItemService;
 import lombok.RequiredArgsConstructor;
 
 @Controller

@@ -1,13 +1,15 @@
-package com.zrp.toyproject0.item.service;
+package com.zrp.toyproject0.domain.item.service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
-import com.zrp.toyproject0.item.dto.ItemRequest;
-import com.zrp.toyproject0.item.dto.ItemResponse;
-import com.zrp.toyproject0.item.entity.Item;
-import com.zrp.toyproject0.item.repository.ItemRepository;
+
+import com.zrp.toyproject0.domain.item.dto.ItemRequest;
+import com.zrp.toyproject0.domain.item.dto.ItemResponse;
+import com.zrp.toyproject0.domain.item.entity.Item;
+import com.zrp.toyproject0.domain.item.repository.ItemRepository;
+
 import lombok.RequiredArgsConstructor;
 
 @Service

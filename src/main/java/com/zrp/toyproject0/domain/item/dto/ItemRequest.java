@@ -1,6 +1,7 @@
-package com.zrp.toyproject0.item.dto;
+package com.zrp.toyproject0.domain.item.dto;
 
-import com.zrp.toyproject0.item.entity.Item;
+import com.zrp.toyproject0.domain.item.entity.Item;
+
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

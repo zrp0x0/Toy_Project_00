@@ -1,8 +1,9 @@
-package com.zrp.toyproject0.item.service;
+package com.zrp.toyproject0.domain.item.service;
 
 import java.util.List;
-import com.zrp.toyproject0.item.dto.ItemRequest;
-import com.zrp.toyproject0.item.dto.ItemResponse;
+
+import com.zrp.toyproject0.domain.item.dto.ItemRequest;
+import com.zrp.toyproject0.domain.item.dto.ItemResponse;
 
 public interface ItemService {
 
@@ -11,4 +12,5 @@ public interface ItemService {
     ItemResponse detailItem(Long id);
     boolean updateItem(ItemRequest itemRequest, Long id);
     boolean deleteItem(Long id);
+    
 }

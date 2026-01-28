@@ -1,7 +1,8 @@
-package com.zrp.toyproject0.item.entity;
+package com.zrp.toyproject0.domain.item.entity;
 
 import java.time.LocalDateTime;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -43,6 +44,9 @@ public class Item {
     @CreatedDate
     @Column(updatable = false) // 수정 시에는 날짜가 바뀌지 않도록 보호
     private LocalDateTime regDate;
+
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
 
     // 판매처 (회원가입 기능 완성 후)
 

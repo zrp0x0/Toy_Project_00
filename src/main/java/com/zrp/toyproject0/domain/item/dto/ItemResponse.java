@@ -1,7 +1,9 @@
-package com.zrp.toyproject0.item.dto;
+package com.zrp.toyproject0.domain.item.dto;
 
 import java.time.LocalDateTime;
-import com.zrp.toyproject0.item.entity.Item;
+
+import com.zrp.toyproject0.domain.item.entity.Item;
+
 import lombok.Getter;
 import lombok.ToString;
 
