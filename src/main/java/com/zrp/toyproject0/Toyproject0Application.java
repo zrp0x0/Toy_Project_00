@@ -13,4 +13,3 @@ public class Toyproject0Application {
 	}
 
 }
-
