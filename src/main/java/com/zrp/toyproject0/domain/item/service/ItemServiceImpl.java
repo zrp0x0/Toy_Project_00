@@ -21,10 +21,10 @@ public class ItemServiceImpl implements ItemService {
 
     // 상품 생성
     @Override
-    public boolean createItem(ItemRequest itemRequest) {
+    public Long createItem(ItemRequest itemRequest) {
         Item item = itemRequest.toEntity();
-        itemRepository.save(item);
-        return true;
+        Long id = itemRepository.save(item).getId();
+        return id;
     }
 
 

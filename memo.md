@@ -344,3 +344,9 @@ private LocalDateTime updatedAt;
 - 권한 설정 등 
 - API 권한 설정 해보기
 - HTML 단에서도 권한 설정 해보기
+
+
+### 좀 나중에 할 것
+- 제대로 된 검증 테스트
+- 예외 처리
+- 에러 처리

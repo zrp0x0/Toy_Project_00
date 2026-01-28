@@ -18,7 +18,7 @@ public class ItemResponse {
     private LocalDateTime regDate;
     
     // 판매처
-
+    
 
     // Entity => DTO는 정적 메소드가 좋음
     public static ItemResponse from(Item item) {

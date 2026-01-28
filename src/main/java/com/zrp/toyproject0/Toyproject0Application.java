@@ -14,4 +14,3 @@ public class Toyproject0Application {
 
 }
 
-// spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect

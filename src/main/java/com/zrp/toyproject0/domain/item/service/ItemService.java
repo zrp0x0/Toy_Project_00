@@ -7,7 +7,7 @@ import com.zrp.toyproject0.domain.item.dto.ItemResponse;
 
 public interface ItemService {
 
-    boolean createItem(ItemRequest itemRequest);
+    Long createItem(ItemRequest itemRequest);
     List<ItemResponse> findAll();
     ItemResponse detailItem(Long id);
     boolean updateItem(ItemRequest itemRequest, Long id);

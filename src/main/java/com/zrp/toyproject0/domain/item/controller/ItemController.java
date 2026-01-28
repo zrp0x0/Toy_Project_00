@@ -3,14 +3,19 @@ package com.zrp.toyproject0.domain.item.controller;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.zrp.toyproject0.domain.item.dto.ItemRequest;
 import com.zrp.toyproject0.domain.item.dto.ItemResponse;
 import com.zrp.toyproject0.domain.item.service.ItemService;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -31,11 +36,18 @@ public class ItemController {
 
     @PostMapping("/item/create")
     public String itemCreate(
-        ItemRequest itemRequest
+        @Valid ItemRequest itemRequest,
+        BindingResult bindingResult,
+        RedirectAttributes redirectAttributes
     ) {
-        itemService.createItem(itemRequest);
-        // 나중에 id detail로 전환하는 로직 작업 해보자
-        return "redirect:/item/list";
+        if (bindingResult.hasErrors()) {
+            return "itemCreate.html";
+        }
+
+        Long id = itemService.createItem(itemRequest);
+        redirectAttributes.addAttribute("id", id);
+
+        return "redirect:/item/detail/{id}";
     }
     
 
@@ -71,11 +83,7 @@ public class ItemController {
         Model model        
     ) {
         ItemResponse itemResponse = itemService.detailItem(id);
-
-        ItemRequest itemRequest = new ItemRequest();
-        itemRequest.setName(itemResponse.getName());
-        itemRequest.setPrice(itemResponse.getPrice());
-        itemRequest.setCount(itemResponse.getCount());
+        ItemRequest itemRequest = ItemRequest.from(itemResponse);
 
         model.addAttribute("itemForm", itemRequest);
         model.addAttribute("itemId", id);
@@ -86,10 +94,18 @@ public class ItemController {
     @PatchMapping("/item/update/{id}")
     public String itemUpdate(
         @PathVariable("id") Long id,
-        ItemRequest itemRequest
+        @Valid ItemRequest itemRequest,
+        BindingResult bindingResult,
+        RedirectAttributes redirectAttributes
     ) {
+        if (bindingResult.hasErrors()) {
+            return "itemUpdate.html";
+        }
+
         itemService.updateItem(itemRequest, id);
-        return "redirect:/item/list";
+        redirectAttributes.addAttribute("id", id);
+
+        return "redirect:/item/detail/{id}";
     }
     
 

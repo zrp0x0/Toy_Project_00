@@ -39,4 +39,13 @@ public class ItemRequest {
         return item;
     }
 
+    // Response => Request
+    public static ItemRequest from(ItemResponse itemResponse) {
+        ItemRequest itemRequest = new ItemRequest();
+        itemRequest.name = itemResponse.getName();
+        itemRequest.price = itemResponse.getPrice();
+        itemRequest.count = itemResponse.getCount();
+        return itemRequest;
+    }
+
 }
