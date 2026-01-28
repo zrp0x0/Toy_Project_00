@@ -2,7 +2,9 @@ package com.zrp.toyproject0;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
+@EnableJpaAuditing
 @SpringBootApplication
 public class Toyproject0Application {
 
@@ -11,3 +13,5 @@ public class Toyproject0Application {
 	}
 
 }
+
+// spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
