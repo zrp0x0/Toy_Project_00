@@ -350,3 +350,7 @@ private LocalDateTime updatedAt;
 - 제대로 된 검증 테스트
 - 예외 처리
 - 에러 처리
+
+
+
+### 회원가입 (쿠키 - 세션으로 할 때 한 것들 AtoZ로 작성해보자!! (숙제))

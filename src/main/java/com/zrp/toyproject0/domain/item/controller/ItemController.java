@@ -24,6 +24,11 @@ public class ItemController {
 
     private final ItemService itemService;
 
+    @GetMapping("/")
+    public String root() {
+        return "redirect:/item/list";
+    }
+
 
     // 상품 생성
     @GetMapping("/item/create") 
