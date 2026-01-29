@@ -381,8 +381,8 @@ private LocalDateTime updatedAt;
     - 상품 조회(전체, 세부)
     - 상품 수정
     - 상품 삭제
-
     - 댓글 기능
+
     - 주문 기능(결제 기능 미포함)
         - 트랜잭션 처리
 
@@ -391,8 +391,7 @@ private LocalDateTime updatedAt;
     - N+1 문제 발생 및  (아직 잘 모르겠다 - 댓글 기능하면서 다시 해보자)
     - 페이징 처리
     주의: @OneToMany 관계에서 fetch join을 쓰면 데이터가 '펑' 하고 뻥튀기(Cartesian Product)될 수 있으니, 페이징 처리가 필요한 경우에는 주의해야 합니다.
-    @BatchSize 설정 (강력 추천)
-fetch join의 페이징 문제를 해결하면서 N+1을 획기적으로 줄여주는 설정입니다.
+    @BatchSize 설정 (강력 추천) fetch join의 페이징 문제를 해결하면서 N+1을 획기적으로 줄여주는 설정입니다.
 
 - admin
     - 회원가입 된 유저 정보 보기
@@ -420,3 +419,9 @@ fetch('/item/delete/4', {
 ```
 - 그냥 이거 때리니깐 지워짐
 - 데이터 수정, 삭제 등 위험한 것은 항상 해당 권한이 있는지 로직체크를 반드시 해야함
+
+
+
+### 방금 새로 배운 내용
+- 1:N 상황에서 fetch join 문제점 => batch_size로 해결하기
+    - 이거 페이지 할 때 좀 걸릴 듯

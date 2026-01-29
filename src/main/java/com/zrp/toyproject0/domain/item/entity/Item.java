@@ -65,6 +65,7 @@ public class Item {
     // 댓글 목록 추가 (양방향)
     // mappedBy: Comment 엔티티에 있는 'item' 필드에 의해 매핑되었음을 명시
     // orphanRemoval: 상품이 삭제되면 댓글도 고아가 되어 삭제되게 설정
+    @org.hibernate.annotations.BatchSize(size = 100)
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default // 빌더 사용 시 리스트 초기화 유지
     private List<Comment> comments = new ArrayList<>();
