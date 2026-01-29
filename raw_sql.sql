@@ -6,3 +6,4 @@ select * from member;
 select * from spring_session;
 select * from spring_session_attributes;
 select * from comment;
+select * from orders;

@@ -1,7 +1,13 @@
 package com.zrp.toyproject0.domain.order.entity;
 
+import java.time.LocalDateTime;
+
+import org.springframework.data.annotation.CreatedDate;
+
+import com.zrp.toyproject0.domain.item.entity.Item;
 import com.zrp.toyproject0.domain.member.entity.Member;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -32,6 +38,29 @@ public class Order {
     @JoinColumn(name = "member_id")
     private Member member; // 주문 회원
 
-    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id")
+    private Item item;
+
+    private Long orderPrice; // 주문 당시 가격 (Item 가격이 변동될 수 있으므로 기록)
+    private Integer count;   // 주문 수량
+
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime orderDate;
+
+
+    public static Order createOrder(Member member, Item item, int count) {
+        Order order = new Order();
+        order.setMember(member);
+        order.setItem(item);
+        order.setOrderPrice(item.getPrice());
+        order.setCount(count);
+
+        // Member 엔티티에 주문 목록이 있다면 추가 (양방향 매핑 시)
+        member.getOrders().add(order);
+
+        return order;
+    }
 
 }

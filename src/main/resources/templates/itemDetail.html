@@ -71,6 +71,21 @@
                 </form>
             </div>
         </div>
+
+        <div class="card-footer bg-white p-3">
+            <form id="orderForm" class="row g-2 align-items-center">
+                <input type="hidden" id="orderItemId" th:value="${item.id}">
+                <div class="col-auto">
+                    <label for="orderCount" class="col-form-label">수량:</label>
+                </div>
+                <div class="col-auto">
+                    <input type="number" id="orderCount" class="form-control" value="1" min="1" th:max="${item.count}" required>
+                </div>
+                <div class="col-auto">
+                    <button type="button" class="btn btn-primary" onclick="submitOrder()">장바구니 추가(주문)</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -129,14 +144,60 @@
                 body: JSON.stringify(data)
             });
 
+            if (response.redirected && response.url.includes('/login')) {
+                alert("로그인이 필요합니다.");
+                location.href = "/login";
+                return;
+            }
+
             if (response.ok) {
                 alert("댓글이 등록되었습니다.");
                 location.reload(); // 등록 후 화면 새로고침
-            } else if (response.status === 401) {
-                alert("로그인이 필요합니다.");
-                location.href = "/login";
             } else {
                 alert("댓글 등록에 실패했습니다.");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("서버 통신 중 오류가 발생했습니다.");
+        }
+    }
+
+    async function submitOrder() {
+        const itemId = document.getElementById('orderItemId').value;
+        const count = document.getElementById('orderCount').value;
+
+        if (count <= 0) {
+            alert("수량은 1개 이상이어야 합니다.");
+            return;
+        }
+
+        const data = {
+            itemId: itemId,
+            count: parseInt(count)
+        };
+
+        try {
+            const response = await fetch('/order/create', { // 주문 생성 API 경로 (임의 설정)
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // CSRF 활성화 시 토큰 추가 필요
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (response.redirected && response.url.includes('/login')) {
+                alert("로그인이 필요합니다.");
+                location.href = "/login";
+                return;
+            }
+
+            if (response.ok) {
+                alert("주문이 완료되었습니다.");
+                location.href = "/item/list"; // 성공 시 목록으로 이동
+            } else {
+                const errorMsg = await response.text();
+                alert("주문 실패: " + errorMsg);
             }
         } catch (error) {
             console.error("Error:", error);

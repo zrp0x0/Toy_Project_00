@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.zrp.toyproject0.domain.comment.entity.Comment;
 import com.zrp.toyproject0.domain.item.entity.Item;
+import com.zrp.toyproject0.domain.order.entity.Order;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -57,5 +58,9 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     @Builder.Default
     private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+    @Builder.Default
+    private List<Order> orders = new ArrayList<>();
 
 }

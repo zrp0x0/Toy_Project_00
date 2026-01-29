@@ -406,6 +406,8 @@ private LocalDateTime updatedAt;
     - Comment
     - Order
 
+- Testing & Exception & Logging
+- Refactoring
 
 
 ### 와 대박 왜 보안이 중요한지 
@@ -426,3 +428,9 @@ fetch('/item/delete/4', {
 ### 방금 새로 배운 내용
 - 1:N 상황에서 fetch join 문제점 => batch_size로 해결하기
     - 이거 페이지 할 때 좀 걸릴 듯
+
+
+
+### 스프링 시큐리티 permitAll()
+- 302 redirect /login => 200 ok로 인식
+- response.redirect: 리다이렉트 응답으로 온 것인가를 체크함
