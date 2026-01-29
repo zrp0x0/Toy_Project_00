@@ -1,5 +1,6 @@
 package com.zrp.toyproject0.domain.order.service;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,15 @@ public class OrderServiceImpl implements OrderService {
         }
 
         return id; 
+    }
+
+    @Override
+    public List<Order> getUserOrderList(Authentication auth) {
+        Optional<Member> result = memberRepository.findByUsername(auth.getName());
+        if (result.isPresent()) {
+            return result.get().getOrders();
+        }
+        return null;
     }
     
 }

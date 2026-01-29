@@ -2,11 +2,9 @@ package com.zrp.toyproject0.domain.member.entity;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.zrp.toyproject0.domain.comment.entity.Comment;
 import com.zrp.toyproject0.domain.item.entity.Item;
 import com.zrp.toyproject0.domain.order.entity.Order;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>주문 및 장바구니 - ToyShop</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+        body { padding-top: 70px; background-color: #f8f9fa; }
+        .nav-tabs .nav-link { color: #495057; font-weight: bold; border: none; padding: 1rem 1.5rem; }
+        .nav-tabs .nav-link.active { color: #0d6efd; border-bottom: 3px solid #0d6efd; background: none; }
+        .order-card { border: none; border-radius: 12px; transition: silver 0.2s; }
+        .empty-state { padding: 100px 0; }
+    </style>
+</head>
+<body>
+
+    <div th:replace="~{ nav.html::navbar }"></div>
+
+    <div class="container my-5" style="max-width: 900px;">
+        <h2 class="mb-4 fw-bold"><i class="bi bi-bag-check-fill me-2"></i>쇼핑 내역</h2>
+
+        <ul class="nav nav-tabs mb-4" id="orderTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="cart-tab" data-bs-toggle="tab" data-bs-target="#cart-panel" type="button" role="tab">
+                    장바구니 <span class="badge bg-warning text-dark ms-1" th:text="${#lists.size(orders.?[status.name() == 'CART'])}">0</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="ordered-tab" data-bs-toggle="tab" data-bs-target="#ordered-panel" type="button" role="tab">
+                    주문 완료 <span class="badge bg-success ms-1" th:text="${#lists.size(orders.?[status.name() == 'ORDERED'])}">0</span>
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="orderTabContent">
+            
+            <div class="tab-pane fade show active" id="cart-panel" role="tabpanel">
+                <div th:if="${#lists.isEmpty(orders.?[status.name() == 'CART'])}" class="empty-state text-center bg-white rounded shadow-sm">
+                    <i class="bi bi-cart fs-1 text-muted"></i>
+                    <p class="mt-3 text-muted">장바구니가 비어 있습니다.</p>
+                    <a href="/item/list" class="btn btn-outline-primary btn-sm">상품 보러가기</a>
+                </div>
+
+                <div class="row g-3" th:unless="${#lists.isEmpty(orders.?[status.name() == 'CART'])}">
+                    <div class="col-12" th:each="order : ${orders}" th:if="${order.status.name() == 'CART'}">
+                        <div class="card shadow-sm order-card">
+                            <div class="card-body d-flex align-items-center p-4">
+                                <div class="flex-grow-1">
+                                    <h5 class="fw-bold mb-1" th:text="${order.item.name}">상품명</h5>
+                                    <small class="text-muted">수량: [[${order.count}]]개 | 단가: [[${#numbers.formatInteger(order.orderPrice, 0, 'COMMA')}]]원</small>
+                                    <h4 class="mt-2 fw-bold text-primary mb-0">[[${#numbers.formatInteger(order.orderPrice * order.count, 0, 'COMMA')}]]원</h4>
+                                </div>
+                                <div class="text-end">
+                                    <button class="btn btn-primary mb-2 d-block w-100" th:onclick="'confirmOrder(' + ${order.id} + ')'">주문하기</button>
+                                    <button class="btn btn-light btn-sm text-danger w-100" th:onclick="'deleteOrder(' + ${order.id} + ')'">삭제</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="ordered-panel" role="tabpanel">
+                <div th:if="${#lists.isEmpty(orders.?[status.name() == 'ORDERED'])}" class="empty-state text-center bg-white rounded shadow-sm">
+                    <i class="bi bi-receipt fs-1 text-muted"></i>
+                    <p class="mt-3 text-muted">최근 주문한 내역이 없습니다.</p>
+                </div>
+
+                <div class="row g-3" th:unless="${#lists.isEmpty(orders.?[status.name() == 'ORDERED'])}">
+                    <div class="col-12" th:each="order : ${orders}" th:if="${order.status.name() == 'ORDERED'}">
+                        <div class="card shadow-sm order-card border-start border-success border-4">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted small" th:text="${#temporals.format(order.orderDate, 'yyyy-MM-dd HH:mm')}">날짜</span>
+                                    <span class="badge bg-success">결제완료</span>
+                                </div>
+                                <h5 class="fw-bold mb-1" th:text="${order.item.name}">상품명</h5>
+                                <div class="d-flex justify-content-between align-items-end">
+                                    <small class="text-muted">수량: [[${order.count}]]개</small>
+                                    <h5 class="fw-bold mb-0">[[${#numbers.formatInteger(order.orderPrice * order.count, 0, 'COMMA')}]]원</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        async function confirmOrder(orderId) {
+            if(!confirm("주문을 확정하시겠습니까?")) return;
+            const response = await fetch(`/order/confirm/${orderId}`, { method: 'PATCH' });
+            if (response.ok) { alert("주문 완료!"); location.reload(); }
+        }
+
+        async function deleteOrder(orderId) {
+            if(!confirm("정말 삭제하시겠습니까?")) return;
+            const response = await fetch(`/order/delete/${orderId}`, { method: 'DELETE' });
+            if (response.ok) location.reload();
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

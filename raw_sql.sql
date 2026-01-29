@@ -7,3 +7,5 @@ select * from spring_session;
 select * from spring_session_attributes;
 select * from comment;
 select * from orders;
+
+delete from orders where id = 1;
