@@ -74,6 +74,77 @@
     </div>
 </div>
 
+<div class="card shadow mt-4 mb-5">
+    <div class="card-header bg-light p-3">
+        <h5 class="mb-0">댓글 <span th:text="${#lists.size(item.comments)}">0</span>개</h5>
+    </div>
+    
+    <div class="card-body">
+        <div th:if="${#lists.isEmpty(item.comments)}" class="text-center text-muted py-3">
+            첫 번째 댓글을 남겨보세요!
+        </div>
+        <div th:each="comment : ${item.comments}" class="border-bottom mb-3 pb-2">
+            <div class="d-flex justify-content-between">
+                <strong th:text="${comment.userDisplayName}">작성자명</strong>
+                <small class="text-muted" th:text="${#temporals.format(comment.regDate, 'yyyy-MM-dd HH:mm')}">2026-01-29</small>
+            </div>
+            <p class="mb-1 mt-2" th:text="${comment.content}">댓글 내용이 여기에 표시됩니다.</p>
+        </div>
+    </div>
+
+    <div class="card-footer bg-white p-3">
+        <form id="commentForm">
+            <input type="hidden" id="itemId" th:value="${item.id}">
+            
+            <div class="input-group">
+                <textarea id="commentContent" class="form-control" rows="2" placeholder="댓글을 입력해주세요." required></textarea>
+                <button type="button" class="btn btn-dark" onclick="submitComment()">등록</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    async function submitComment() {
+        const content = document.getElementById('commentContent').value;
+        const itemId = document.getElementById('itemId').value;
+
+        if (!content.trim()) {
+            alert("댓글 내용을 입력해주세요.");
+            return;
+        }
+
+        const data = {
+            content: content,
+            itemId: itemId,
+        };
+
+        try {
+            const response = await fetch('/comment/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // CSRF 설정을 켰을 경우 아래 주석 해제 후 토큰 추가 필요
+                    // 'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]').content
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                alert("댓글이 등록되었습니다.");
+                location.reload(); // 등록 후 화면 새로고침
+            } else if (response.status === 401) {
+                alert("로그인이 필요합니다.");
+                location.href = "/login";
+            } else {
+                alert("댓글 등록에 실패했습니다.");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("서버 통신 중 오류가 발생했습니다.");
+        }
+    }
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

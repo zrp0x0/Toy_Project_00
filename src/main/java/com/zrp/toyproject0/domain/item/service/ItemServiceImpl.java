@@ -51,7 +51,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemResponse detailItem(Long id) {
-        Optional<Item> result = itemRepository.findByIdWithMember(id);
+        Optional<Item> result = itemRepository.findByIdWithMemberAndComments(id);
         if (result.isPresent()) {
             ItemResponse itemResponse = ItemResponse.from(result.get());
             return itemResponse;

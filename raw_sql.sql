@@ -5,3 +5,4 @@ select * from item;
 select * from member;
 select * from spring_session;
 select * from spring_session_attributes;
+select * from comment;

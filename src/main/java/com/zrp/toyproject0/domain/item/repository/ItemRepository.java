@@ -17,4 +17,11 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Query("select i from Item i left join fetch i.member where i.id = :id")
     Optional<Item> findByIdWithMember(@Param("id") Long id);
 
+    @Query("select i from Item i " +
+       "join fetch i.member " + // 상품 등록자 조인
+       "left join fetch i.comments c " + // 댓글 조인 (댓글이 없을 수 있으므로 left join)
+       "left join fetch c.member " + // 댓글 작성자 조인
+       "where i.id = :id")
+    Optional<Item> findByIdWithMemberAndComments(@Param("id") Long id);
+
 }
