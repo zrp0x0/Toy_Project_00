@@ -19,6 +19,8 @@
 </head>
 <body class="bg-light">
 
+<div th:replace="~{ nav.html::navbar }"></div>
+
 <div class="container detail-container">
     <div class="card shadow">
         <div class="card-header bg-dark text-white p-3">
@@ -50,12 +52,19 @@
                             2026-01-28 12:00:00
                         </td>
                     </tr>
+                    <tr>
+                        <td class="label-column p-3">등록자</td>
+                        <td class="p-3 text-muted" 
+                            th:text="${item.userDisplayName}">
+                            2026-01-28 12:00:00
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
         <div class="card-footer bg-white d-flex justify-content-between p-3">
             <a href="/item/list" class="btn btn-secondary">목록으로</a>
-            <div>
+            <div th:if="${item.username == #authentication.name}">
                 <a th:href="@{/item/update/{id}(id=${item.id})}" class="btn btn-warning">수정하기</a>
                 <form th:action="@{/item/delete/{id}(id=${item.id})}" th:method="DELETE" style="display:inline;">
                     <button type="submit" class="btn btn-danger" onclick="return confirm('정말로 삭제하시겠습니까?')">삭제</button>

@@ -32,7 +32,19 @@ public class SecurityConfig {
           .authenticated()
       );
 
-      
+      // 로그인
+      http.formLogin((form) -> form
+        .loginPage("/login")             // 내가 만든 커스텀 로그인 페이지
+        .defaultSuccessUrl("/item/list") // 로그인 성공 시 이동할 곳
+        .permitAll()
+      );
+
+      // 로그아웃
+      http.logout((logout) -> logout
+        .logoutSuccessUrl("/item/list")
+        .invalidateHttpSession(true)     // 세션 무효화
+        .deleteCookies("JSESSIONID")     // 쿠키 삭제
+      );
 
       return http.build();
     }

@@ -16,10 +16,9 @@ public class ItemResponse {
     private Long price;
     private Integer count;
     private LocalDateTime regDate;
+    private String userDisplayName;
+    private String username;
     
-    // 판매처
-    
-
     // Entity => DTO는 정적 메소드가 좋음
     public static ItemResponse from(Item item) {
         ItemResponse dto = new ItemResponse();
@@ -28,7 +27,9 @@ public class ItemResponse {
         dto.price = item.getPrice();
         dto.count = item.getCount();
         dto.regDate = item.getRegDate();
-        // 판매처
+        dto.userDisplayName = (item.getMember() != null ? item.getMember().getDisplayName() : "알 수 없는 사용자");
+        dto.username = (item.getMember() != null ? item.getMember().getUsername() : "dummy"); // 이렇게 하면 안됨!!
+         // 판매처
         return dto;
     }
 

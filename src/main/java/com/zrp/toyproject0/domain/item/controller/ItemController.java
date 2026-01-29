@@ -1,6 +1,9 @@
 package com.zrp.toyproject0.domain.item.controller;
 
 import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -43,13 +46,14 @@ public class ItemController {
     public String itemCreate(
         @Valid ItemRequest itemRequest,
         BindingResult bindingResult,
-        RedirectAttributes redirectAttributes
+        RedirectAttributes redirectAttributes,
+        Authentication auth
     ) {
         if (bindingResult.hasErrors()) {
             return "itemCreate.html";
         }
 
-        Long id = itemService.createItem(itemRequest);
+        Long id = itemService.createItem(itemRequest, auth);
         redirectAttributes.addAttribute("id", id);
 
         return "redirect:/item/detail/{id}";
@@ -85,7 +89,8 @@ public class ItemController {
     @GetMapping("/item/update/{id}")
     public String itemUpdate(
         @PathVariable("id") Long id,
-        Model model        
+        Model model,
+        Authentication auth        
     ) {
         ItemResponse itemResponse = itemService.detailItem(id);
         ItemRequest itemRequest = ItemRequest.from(itemResponse);
@@ -101,13 +106,14 @@ public class ItemController {
         @PathVariable("id") Long id,
         @Valid ItemRequest itemRequest,
         BindingResult bindingResult,
-        RedirectAttributes redirectAttributes
+        RedirectAttributes redirectAttributes,
+        Authentication auth
     ) {
         if (bindingResult.hasErrors()) {
             return "itemUpdate.html";
         }
 
-        itemService.updateItem(itemRequest, id);
+        itemService.updateItem(itemRequest, id, auth);
         redirectAttributes.addAttribute("id", id);
 
         return "redirect:/item/detail/{id}";
@@ -116,11 +122,15 @@ public class ItemController {
 
     // 상품 삭제
     @DeleteMapping("/item/delete/{id}")
-    public String itemDelete(
-        @PathVariable("id") Long id
+    public ResponseEntity<String> itemDelete(
+        @PathVariable("id") Long id,
+        Authentication auth
     ) {
-       itemService.deleteItem(id);     
-        return "redirect:/item/list";
+        if (itemService.deleteItem(id, auth)) {
+            return ResponseEntity.ok("삭제 성공");
+        }
+        // return "redirect:/item/list";
+        return ResponseEntity.ok("삭제 실패");
     }
 
 }
