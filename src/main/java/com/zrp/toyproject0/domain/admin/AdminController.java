@@ -8,15 +8,12 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.zrp.toyproject0.domain.comment.entity.Comment;
 import com.zrp.toyproject0.domain.comment.repository.CommentRepository;
-import com.zrp.toyproject0.domain.item.repository.ItemRepository;
 import com.zrp.toyproject0.domain.member.entity.Member;
 import com.zrp.toyproject0.domain.order.entity.Order;
 import com.zrp.toyproject0.domain.order.entity.OrderStatus;
 import com.zrp.toyproject0.domain.order.repository.OrderRepository;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +25,6 @@ public class AdminController {
     
     private final AdminServiceImpl adminService;
     private final CommentRepository commentRepository;
-    private final ItemRepository itemRepository;
     private final OrderRepository orderRepository;
 
     @GetMapping("/page")
