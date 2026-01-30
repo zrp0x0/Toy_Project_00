@@ -1,7 +1,8 @@
 package com.zrp.toyproject0.domain.item.controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -15,18 +16,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.zrp.toyproject0.domain.comment.dto.CommentResponse;
+import com.zrp.toyproject0.domain.comment.service.CommentService;
 import com.zrp.toyproject0.domain.item.dto.ItemRequest;
 import com.zrp.toyproject0.domain.item.dto.ItemResponse;
 import com.zrp.toyproject0.domain.item.service.ItemService;
-
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 
 @Controller
 @RequiredArgsConstructor
 public class ItemController {
 
     private final ItemService itemService;
+    private final CommentService commentService;
 
     @GetMapping("/")
     public String root() {
@@ -64,9 +68,10 @@ public class ItemController {
     // 상품 조회
     @GetMapping("/item/list")
     public String itemList(
+        @PageableDefault(size = 5, sort = "regDate", direction = Sort.Direction.DESC) Pageable pageable,
         Model model
     ) {
-        List<ItemResponse> items = itemService.findAll();
+        Page<ItemResponse> items = itemService.findAllPage(pageable);
         model.addAttribute("items", items);
         return "itemList.html";
     }
@@ -74,11 +79,14 @@ public class ItemController {
     @GetMapping("/item/detail/{id}")
     public String itemDetail(
         @PathVariable("id") Long id,
-        Model model
+        Model model,
+        @PageableDefault(size = 5, sort = "regDate", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         ItemResponse itemResponse = itemService.detailItem(id);
+        Page<CommentResponse> itemCommentList = commentService.findByItemId(id, pageable);
         if (itemResponse != null) {
             model.addAttribute("item", itemResponse);
+            model.addAttribute("itemCommentList", itemCommentList);
             return "itemDetail.html";
         } else {
             return "redirect:/item/list";
@@ -88,9 +96,10 @@ public class ItemController {
     @GetMapping("/item/search")
     public String itemSearch(
         @RequestParam("q") String q,
+        @PageableDefault(size = 5, sort = "reg_date", direction = Sort.Direction.DESC) Pageable pageable,
         Model model
     ) {
-        List<ItemResponse> items = itemService.searchItem(q);
+        Page<ItemResponse> items = itemService.searchItemPage(q, pageable);
         model.addAttribute("items", items);
         return "itemList.html";
     }

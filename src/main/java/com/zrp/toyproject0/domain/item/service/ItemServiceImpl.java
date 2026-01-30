@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -51,7 +53,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemResponse detailItem(Long id) {
-        Optional<Item> result = itemRepository.findByIdWithMemberAndComments(id);
+        Optional<Item> result = itemRepository.findById(id);
         if (result.isPresent()) {
             ItemResponse itemResponse = ItemResponse.from(result.get());
             return itemResponse;
@@ -60,13 +62,27 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-        @Override
+    @Override
     public List<ItemResponse> searchItem(String searchText) {
         List<Item> result = itemRepository.searchByNameFullText(searchText);
         List<ItemResponse> items = result.stream() 
             .map(ItemResponse::from)
             .collect(Collectors.toList());
         return items;
+    }
+
+    @Override
+    public Page<ItemResponse> findAllPage(Pageable pageable) {
+        Page<Item> result = itemRepository.customFindAllPage(pageable);
+        return result.map(ItemResponse::from);
+    }
+
+    @Override
+    public Page<ItemResponse> searchItemPage(String searchText, Pageable pageable) {
+        Page<Item> result = itemRepository.searchByNameFullTextPage(searchText, pageable);
+        System.out.println("");
+        System.out.println("### 검색된 개수: " + result.getTotalElements());
+        return result.map(ItemResponse::from);
     }
 
 

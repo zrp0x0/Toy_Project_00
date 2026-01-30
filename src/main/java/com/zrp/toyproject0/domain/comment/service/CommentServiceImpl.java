@@ -2,10 +2,13 @@ package com.zrp.toyproject0.domain.comment.service;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.zrp.toyproject0.domain.comment.dto.CommentRequest;
+import com.zrp.toyproject0.domain.comment.dto.CommentResponse;
 import com.zrp.toyproject0.domain.comment.entity.Comment;
 import com.zrp.toyproject0.domain.comment.repository.CommentRepository;
 import com.zrp.toyproject0.domain.item.entity.Item;
@@ -35,6 +38,12 @@ public class CommentServiceImpl implements CommentService {
         } else {
             return;
         }
+    }
+
+    @Override
+    public Page<CommentResponse> findByItemId(Long itemId, Pageable pageable) {
+        Page<Comment> result = commentRepository.findByItemId(itemId, pageable);
+        return result.map(CommentResponse::from);
     }
     
 }

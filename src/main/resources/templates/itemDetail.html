@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>상품 상세 정보</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <style>
         .detail-container {
             max-width: 700px;
@@ -14,6 +15,15 @@
             width: 30%;
             background-color: #f8f9fa;
             font-weight: 600;
+        }
+        /* 페이지네이션 스타일 커스텀 */
+        .pagination .page-link {
+            color: #333;
+            border: none;
+        }
+        .pagination .active .page-link {
+            background-color: #333;
+            color: white;
         }
     </style>
 </head>
@@ -49,19 +59,16 @@
                         <td class="label-column p-3">등록일</td>
                         <td class="p-3 text-muted" 
                             th:text="${#temporals.format(item.regDate, 'yyyy-MM-dd HH:mm:ss')}">
-                            2026-01-28 12:00:00
                         </td>
                     </tr>
                     <tr>
                         <td class="label-column p-3">등록자</td>
-                        <td class="p-3 text-muted" 
-                            th:text="${item.userDisplayName}">
-                            2026-01-28 12:00:00
-                        </td>
+                        <td class="p-3 text-muted" th:text="${item.userDisplayName}"></td>
                     </tr>
                 </tbody>
             </table>
         </div>
+        
         <div class="card-footer bg-white d-flex justify-content-between p-3">
             <a href="/item/list" class="btn btn-secondary">목록으로</a>
             <div th:if="${item.username == #authentication.name}">
@@ -76,49 +83,68 @@
             <form id="orderForm" class="row g-2 align-items-center">
                 <input type="hidden" id="orderItemId" th:value="${item.id}">
                 <div class="col-auto">
-                    <label for="orderCount" class="col-form-label">수량:</label>
+                    <label for="orderCount" class="col-form-label fw-bold">주문 수량:</label>
                 </div>
                 <div class="col-auto">
                     <input type="number" id="orderCount" class="form-control" value="1" min="1" th:max="${item.count}" required>
                 </div>
                 <div class="col-auto">
-                    <button type="button" class="btn btn-primary" onclick="submitOrder()">장바구니 추가(주문)</button>
+                    <button type="button" class="btn btn-primary" onclick="submitOrder()">주문하기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow mt-4 mb-5">
+        <div class="card-header bg-light p-3">
+            <h5 class="mb-0">댓글 <span th:text="${itemCommentList.totalElements}">0</span>개</h5>
+        </div>
+        
+        <div class="card-body">
+            <div th:if="${itemCommentList.isEmpty()}" class="text-center text-muted py-3">
+                첫 번째 댓글을 남겨보세요!
+            </div>
+            
+            <div th:each="comment : ${itemCommentList.content}" class="border-bottom mb-3 pb-2">
+                <div class="d-flex justify-content-between">
+                    <strong th:text="${comment.userDisplayName}">작성자명</strong>
+                    <small class="text-muted" th:text="${#temporals.format(comment.regDate, 'yyyy-MM-dd HH:mm')}"></small>
+                </div>
+                <p class="mb-1 mt-2" th:text="${comment.content}">댓글 내용</p>
+            </div>
+
+            <nav th:if="${itemCommentList.totalPages > 1}" class="mt-4">
+                <ul class="pagination pagination-sm justify-content-center">
+                    <li class="page-item" th:classappend="${!itemCommentList.hasPrevious()} ? 'disabled'">
+                        <a class="page-link" th:href="@{/item/detail/{id}(id=${item.id}, page=${itemCommentList.number - 1})}">&laquo;</a>
+                    </li>
+
+                    <li class="page-item" th:each="p : ${#numbers.sequence(0, itemCommentList.totalPages - 1)}"
+                        th:classappend="${p == itemCommentList.number} ? 'active'">
+                        <a class="page-link" th:href="@{/item/detail/{id}(id=${item.id}, page=${p})}" th:text="${p + 1}">1</a>
+                    </li>
+
+                    <li class="page-item" th:classappend="${!itemCommentList.hasNext()} ? 'disabled'">
+                        <a class="page-link" th:href="@{/item/detail/{id}(id=${item.id}, page=${itemCommentList.number + 1})}">&raquo;</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="card-footer bg-white p-3">
+            <form id="commentForm">
+                <input type="hidden" id="itemId" th:value="${item.id}">
+                <div class="input-group">
+                    <textarea id="commentContent" class="form-control" rows="2" placeholder="댓글을 입력해주세요." required></textarea>
+                    <button type="button" class="btn btn-dark" onclick="submitComment()">등록</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<div class="card shadow mt-4 mb-5">
-    <div class="card-header bg-light p-3">
-        <h5 class="mb-0">댓글 <span th:text="${#lists.size(item.comments)}">0</span>개</h5>
-    </div>
-    
-    <div class="card-body">
-        <div th:if="${#lists.isEmpty(item.comments)}" class="text-center text-muted py-3">
-            첫 번째 댓글을 남겨보세요!
-        </div>
-        <div th:each="comment : ${item.comments}" class="border-bottom mb-3 pb-2">
-            <div class="d-flex justify-content-between">
-                <strong th:text="${comment.userDisplayName}">작성자명</strong>
-                <small class="text-muted" th:text="${#temporals.format(comment.regDate, 'yyyy-MM-dd HH:mm')}">2026-01-29</small>
-            </div>
-            <p class="mb-1 mt-2" th:text="${comment.content}">댓글 내용이 여기에 표시됩니다.</p>
-        </div>
-    </div>
-
-    <div class="card-footer bg-white p-3">
-        <form id="commentForm">
-            <input type="hidden" id="itemId" th:value="${item.id}">
-            
-            <div class="input-group">
-                <textarea id="commentContent" class="form-control" rows="2" placeholder="댓글을 입력해주세요." required></textarea>
-                <button type="button" class="btn btn-dark" onclick="submitComment()">등록</button>
-            </div>
-        </form>
-    </div>
-</div>
 <script>
+    // 댓글 등록
     async function submitComment() {
         const content = document.getElementById('commentContent').value;
         const itemId = document.getElementById('itemId').value;
@@ -128,19 +154,12 @@
             return;
         }
 
-        const data = {
-            content: content,
-            itemId: itemId,
-        };
+        const data = { content: content, itemId: itemId };
 
         try {
             const response = await fetch('/comment/create', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // CSRF 설정을 켰을 경우 아래 주석 해제 후 토큰 추가 필요
-                    // 'X-CSRF-TOKEN': document.querySelector('meta[name="_csrf"]').content
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
 
@@ -152,7 +171,7 @@
 
             if (response.ok) {
                 alert("댓글이 등록되었습니다.");
-                location.reload(); // 등록 후 화면 새로고침
+                location.reload(); 
             } else {
                 alert("댓글 등록에 실패했습니다.");
             }
@@ -162,6 +181,7 @@
         }
     }
 
+    // 주문 등록
     async function submitOrder() {
         const itemId = document.getElementById('orderItemId').value;
         const count = document.getElementById('orderCount').value;
@@ -171,18 +191,12 @@
             return;
         }
 
-        const data = {
-            itemId: itemId,
-            count: parseInt(count)
-        };
+        const data = { itemId: itemId, count: parseInt(count) };
 
         try {
-            const response = await fetch('/order/create', { // 주문 생성 API 경로 (임의 설정)
+            const response = await fetch('/order/create', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // CSRF 활성화 시 토큰 추가 필요
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
 
@@ -194,7 +208,7 @@
 
             if (response.ok) {
                 alert("주문이 완료되었습니다.");
-                location.href = "/item/list"; // 성공 시 목록으로 이동
+                location.href = "/item/list";
             } else {
                 const errorMsg = await response.text();
                 alert("주문 실패: " + errorMsg);

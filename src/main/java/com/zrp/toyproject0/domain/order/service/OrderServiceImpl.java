@@ -2,6 +2,9 @@ package com.zrp.toyproject0.domain.order.service;
 
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import com.zrp.toyproject0.domain.item.entity.Item;
@@ -9,6 +12,7 @@ import com.zrp.toyproject0.domain.item.repository.ItemRepository;
 import com.zrp.toyproject0.domain.member.entity.Member;
 import com.zrp.toyproject0.domain.member.repository.MemberRepository;
 import com.zrp.toyproject0.domain.order.dto.OrderRequest;
+import com.zrp.toyproject0.domain.order.dto.OrderResponse;
 import com.zrp.toyproject0.domain.order.entity.Order;
 import com.zrp.toyproject0.domain.order.entity.OrderStatus;
 import com.zrp.toyproject0.domain.order.repository.OrderRepository;
@@ -81,6 +85,18 @@ public class OrderServiceImpl implements OrderService {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public boolean deleteOrder(Long id) {
+        orderRepository.deleteById(id);
+        return true;
+    }
+
+    @Override
+    public Page<OrderResponse> getOrdersByStatus(String username, OrderStatus status, Pageable pageable) {
+        Page<Order> result = orderRepository.findByUsernameAndStatus(username, status, pageable);
+        return result.map(OrderResponse::from);
     }
 
 }
