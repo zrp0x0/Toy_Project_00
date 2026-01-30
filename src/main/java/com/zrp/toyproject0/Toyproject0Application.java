@@ -13,24 +13,3 @@ public class Toyproject0Application {
 	}
 
 }
-
-class Test {
-
-	private static long SERIAL_ID = 1L;
-
-	private long id;
-	private String name;
-	private String address;
-
-	public Test(String name, String address) {
-		this.id = SERIAL_ID++;
-		this.name = name;
-		this.address = address;
-	}
-
-	@Override
-	public String toString() {
-		return id + " : " + name + " : " + address;
-	}
-
-}

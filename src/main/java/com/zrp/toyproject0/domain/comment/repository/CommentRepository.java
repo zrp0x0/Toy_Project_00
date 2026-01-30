@@ -16,4 +16,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
            countQuery = "select count(c) from Comment c where c.item.id = :itemId")
     Page<Comment> findByItemId(@Param("itemId") Long itemId, Pageable pageable);
 
+    Page<Comment> findByMember_Username(String username, Pageable pageable);
+
 }

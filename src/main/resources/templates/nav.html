@@ -18,7 +18,8 @@
                 <a href="/register" class="btn btn-primary btn-sm">회원가입</a>
             </div>
             <div class="d-flex" sec:authorize="isAuthenticated()">
-                <h4 class="navbar-brand"><a href="/order/list"><span sec:authentication="principal.displayName"></span>님</a></h4>
+                <h4 class="navbar-brand"><a th:href="${#authorization.expression('hasAuthority(''admin'')')} ? '/admin/page/all-member' : '/order/list'">
+                    <span sec:authentication="principal.displayName"></span>님</a></h4>
                 <a href="/logout" class="btn btn-primary btn-sm">로그아웃</a>
             </div>
         </div>
