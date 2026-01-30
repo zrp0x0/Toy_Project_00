@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.zrp.toyproject0.domain.item.dto.ItemRequest;
@@ -82,6 +83,16 @@ public class ItemController {
         } else {
             return "redirect:/item/list";
         }
+    }
+
+    @GetMapping("/item/search")
+    public String itemSearch(
+        @RequestParam("q") String q,
+        Model model
+    ) {
+        List<ItemResponse> items = itemService.searchItem(q);
+        model.addAttribute("items", items);
+        return "itemList.html";
     }
 
 

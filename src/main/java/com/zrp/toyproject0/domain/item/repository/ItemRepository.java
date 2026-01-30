@@ -24,4 +24,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
        "where i.id = :id")
     Optional<Item> findByIdWithMemberAndComments(@Param("id") Long id);
 
+    @Query(value = "SELECT * FROM item WHERE MATCH(name) AGAINST(:query IN NATURAL LANGUAGE MODE)", nativeQuery = true)
+    List<Item> searchByNameFullText(@Param("query") String query);
 }

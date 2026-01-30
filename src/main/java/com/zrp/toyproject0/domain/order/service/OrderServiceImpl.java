@@ -54,18 +54,33 @@ public class OrderServiceImpl implements OrderService {
         return null;
     }
     
+    // 결제 로직(가짜)
     @Override
     @Transactional
-    public void confirmOrder(
+    public boolean confirmOrder(
         Long id
     ) {
-        Optional<Order> result = orderRepository.findById(id);
-        Order confirmOrder = result.get();
-        confirmOrder.setStatus(OrderStatus.ORDERED);
-        orderRepository.save(confirmOrder);
-        Integer orderCount = confirmOrder.getCount();
-        Integer itemCount = result.get().getItem().getCount();
-        result.get().getItem().setCount(itemCount - orderCount);
+        Optional<Order> result1 = orderRepository.findById(id);
+        if (result1.isPresent()) {
+            Order order = result1.get();
+            Integer orderCount = order.getCount();
+            Integer itemCount = order.getItem().getCount();
+            Integer changeItemCount = itemCount - orderCount;
+            System.out.println("여기 1");
+            if (changeItemCount >= 0) {
+                // 실제 결제 로직이 있다면 이 부분에 실행
+                System.out.println("여기 2");
+                order.getItem().setCount(changeItemCount); 
+                order.setStatus(OrderStatus.ORDERED);
+                // orderRepository.save(order);
+                return true;
+            } else {
+                // 구매 못함 처리
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
 }

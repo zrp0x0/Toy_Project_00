@@ -95,6 +95,7 @@
             if(!confirm("주문을 확정하시겠습니까?")) return;
             const response = await fetch(`/order/confirm/${orderId}`, { method: 'PATCH' });
             if (response.ok) { alert("주문 완료!"); location.reload(); }
+            else { alert("주문 처리 실패! "); location.reload(); }
         }
 
         async function deleteOrder(orderId) {

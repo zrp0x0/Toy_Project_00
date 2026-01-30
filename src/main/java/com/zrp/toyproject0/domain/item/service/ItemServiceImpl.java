@@ -60,6 +60,15 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
+        @Override
+    public List<ItemResponse> searchItem(String searchText) {
+        List<Item> result = itemRepository.searchByNameFullText(searchText);
+        List<ItemResponse> items = result.stream() 
+            .map(ItemResponse::from)
+            .collect(Collectors.toList());
+        return items;
+    }
+
 
     // 상품 수정
     @Override
