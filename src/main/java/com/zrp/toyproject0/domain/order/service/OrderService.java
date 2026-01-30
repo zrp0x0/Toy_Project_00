@@ -9,5 +9,6 @@ public interface OrderService {
     
     Long createOrder(Authentication auth, OrderRequest orderRequest);
     List<Order> getUserOrderList(Authentication auth);
+    void confirmOrder(Long id);
     
 }

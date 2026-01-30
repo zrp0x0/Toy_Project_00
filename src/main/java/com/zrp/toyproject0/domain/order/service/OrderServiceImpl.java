@@ -10,8 +10,10 @@ import com.zrp.toyproject0.domain.member.entity.Member;
 import com.zrp.toyproject0.domain.member.repository.MemberRepository;
 import com.zrp.toyproject0.domain.order.dto.OrderRequest;
 import com.zrp.toyproject0.domain.order.entity.Order;
+import com.zrp.toyproject0.domain.order.entity.OrderStatus;
 import com.zrp.toyproject0.domain.order.repository.OrderRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -52,4 +54,18 @@ public class OrderServiceImpl implements OrderService {
         return null;
     }
     
+    @Override
+    @Transactional
+    public void confirmOrder(
+        Long id
+    ) {
+        Optional<Order> result = orderRepository.findById(id);
+        Order confirmOrder = result.get();
+        confirmOrder.setStatus(OrderStatus.ORDERED);
+        orderRepository.save(confirmOrder);
+        Integer orderCount = confirmOrder.getCount();
+        Integer itemCount = result.get().getItem().getCount();
+        result.get().getItem().setCount(itemCount - orderCount);
+    }
+
 }

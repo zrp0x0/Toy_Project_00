@@ -57,7 +57,7 @@ public class OrderController {
         @PathParam("id") Long id
     ) {
         // 이제 주문 확정 및 결제 트랜잭션 처리 및 테스트?도 해보자
-
+        orderService.confirmOrder(id);
         return ResponseEntity.ok("order confirm success");
     }
     
