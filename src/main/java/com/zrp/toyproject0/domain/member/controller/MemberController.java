@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.zrp.toyproject0.domain.member.dto.MemberRequest;
 import com.zrp.toyproject0.domain.member.service.MemberService;
+import com.zrp.toyproject0.global.exceptions.CustomException;
+import com.zrp.toyproject0.global.exceptions.ErrorCode;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,11 +41,11 @@ public class MemberController {
         }
         try {
             memberService.registerMember(memberRequest);    
-        } catch (RuntimeException e) {
-            if (e.getMessage().equals("이미 있는 아이디")) {
-                bindingResult.rejectValue("username", "duplicate", e.getMessage());
-            } else if (e.getMessage().equals("이미 있는 이메일")) {
-                bindingResult.rejectValue("userEmail", "duplicate", e.getMessage());
+        } catch (CustomException e) {
+            if (e.getErrorCode().equals(ErrorCode.DUPLICATE_USERNAME)) {
+                bindingResult.rejectValue("username", "duplicate", e.getErrorCode().getMessage());
+            } else if (e.getErrorCode().equals(ErrorCode.DUPLICATE_EMAIL)) {
+                bindingResult.rejectValue("userEmail", "duplicate", e.getErrorCode().getMessage());
             }
             return "register.html";
         }

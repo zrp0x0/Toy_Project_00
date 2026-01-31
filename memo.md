@@ -548,3 +548,13 @@ fetch('/item/delete/4', {
     - Spring Security를 좀 공부해야할 듯
 
 - 그리고 아마 남은 시간은 DB를 공부 좀 해보자 유튜브보고
+
+
+
+### 테스팅을 하기 전에 예외처리를 해보자
+- try - catch로 잡기
+- 해당 클래스 파일의 @ExceptionHandler가 잡기
+- 그것도 못잡으면 @ControllerAdvice가 잡기 (아하 그래서 @RestControllerAdvice가 따로 있구나!!)
+- enum으로 에러코드 정의
+    - enum 클래스 작성 방법 주의 필드가 아래있어야함 ,구분 후 마지막은 ;
+- CustomException class를 정의한 후에 그걸로 처리하기
