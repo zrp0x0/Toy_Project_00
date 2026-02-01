@@ -2,9 +2,9 @@ package com.zrp.toyproject0;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+// import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-@EnableJpaAuditing
+// @EnableJpaAuditing // JpaConfig WebMvcTest를 위해서
 @SpringBootApplication
 public class Toyproject0Application {
 

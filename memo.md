@@ -557,4 +557,10 @@ fetch('/item/delete/4', {
 - 그것도 못잡으면 @ControllerAdvice가 잡기 (아하 그래서 @RestControllerAdvice가 따로 있구나!!)
 - enum으로 에러코드 정의
     - enum 클래스 작성 방법 주의 필드가 아래있어야함 ,구분 후 마지막은 ;
-- CustomException class를 정의한 후에 그걸로 처리하기
+- CustomException class를 정의한 후에 그걸로 
+
+
+### 내가 공부한 테스트들
+- 단위 테스트
+- 통합 테스트 (실제 DB 연결 후 롤백)
+- 컨트롤러 테스트 (@WebMvcTest)
