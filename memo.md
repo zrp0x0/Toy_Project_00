@@ -567,3 +567,5 @@ fetch('/item/delete/4', {
 
 
 ### git clone test
+- 일단 성공
+- DB 설치 후 실험 해보자!!

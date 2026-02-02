@@ -89,14 +89,25 @@ public class ItemServiceImpl implements ItemService {
     // 상품 수정
     @Override
     public boolean updateItem(ItemRequest itemRequest, Long id, Authentication auth) {
-        Item item = itemRequest.toEntity();
-        if (!item.getMember().getUsername().equals(auth.getName())) {
+
+        Optional<Item> result = itemRepository.findById(id);
+        if (result.isPresent()) {
+            Item item = result.get();
+            item.setName(itemRequest.getName());
+            item.setPrice(itemRequest.getPrice());
+            item.setCount(itemRequest.getCount());
+
+            if (!item.getMember().getUsername().equals(auth.getName())) {
+                return false;
+            }
+            
+            itemRepository.save(item);
+            return true;
+        }
+        else {
             return false;
         }
 
-        item.setId(id);
-        itemRepository.save(item);
-        return true;
     }
 
 
